@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Mashinalar - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Fleet</div>
+    <h1 class="hero-h1 small">Sayohatingizga mos <span class="gold">mashina</span></h1>
+    <p class="hero-p">Sedan, SUV, minivan, premium va elektr mashinalar. Qidiruv natijasidan mashinani tanlang va bron sahifasiga o'ting.</p>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="section-inner">
+    <form class="filter-panel" method="get">
+      <div class="bf-group">
+        <label>Aeroport</label>
+        <select name="airport">
+          <option value="">Aeroport tanlanmagan</option>
+          {% for airport in airports %}
+            <option value="{{ airport.pk }}" {% if selected_airport_id == airport.pk|stringformat:"s" %}selected{% endif %}>{{ airport.city }} ({{ airport.code }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="bf-group">
+        <label>Kelish</label>
+        <input type="date" name="arrival" value="{{ arrival }}">
+      </div>
+      <div class="bf-group">
+        <label>Ketish</label>
+        <input type="date" name="departure" value="{{ departure }}">
+      </div>
+      <div class="bf-group">
+        <label>Tur</label>
+        <select name="type">
+          <option value="">Barchasi</option>
+          {% for value, label in categories %}
+            <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="bf-group">
+        <label>Qidiruv</label>
+        <input type="search" name="q" placeholder="Camry, elektr..." value="{{ query }}">
+      </div>
+      <button class="bf-search" type="submit">Yangilash</button>
+    </form>
+
+    <div class="cars-filter page-filter">
+      <a class="cfilter {% if not selected_category %}active{% endif %}" href="{% url 'car_list' %}">Barchasi</a>
+      {% for value, label in categories %}
+        <a class="cfilter {% if selected_category == value %}active{% endif %}" href="{% url 'car_list' %}?type={{ value }}">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    <div class="cars-grid">
+      {% for car in cars %}
+        {% include "rental/includes/car_card.html" %}
+      {% empty %}
+        <div class="empty-state">Bu filtr bo'yicha mashina topilmadi.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

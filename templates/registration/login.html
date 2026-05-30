@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Kirish - DrivePort{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="sec-eyebrow">Kirish</div>
+    <h1 class="sec-title">Shaxsiy <span class="gold">profil</span></h1>
+    <p class="sec-sub">Faol buyurtmalar va profilingizni boshqarish uchun tizimga kiring.</p>
+
+    <form class="auth-form" method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="mf-group">
+        <label for="{{ form.username.id_for_label }}">Login</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="mf-group">
+        <label for="{{ form.password.id_for_label }}">Parol</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn-confirm" type="submit">Kirish</button>
+    </form>
+    <p class="auth-switch">Akkaunt yo'qmi? <a class="inline-link" href="{% url 'register' %}">Ro'yxatdan o'ting</a></p>
+  </div>
+</section>
+{% endblock %}

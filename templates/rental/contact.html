@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Aloqa - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="section-inner narrow">
+    <div class="sec-eyebrow">Aloqa</div>
+    <h1 class="hero-h1 small">Savolingizni <span class="gold">yuboring</span></h1>
+    <p class="hero-p">Bron holati, qabul qilish nuqtasi, korporativ ijara yoki hamkorlik bo'yicha murojaat qoldiring.</p>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="section-inner contact-grid">
+    <form class="form-panel" method="post" novalidate>
+      {% csrf_token %}
+      <div class="form-grid one">
+        {% for field in form %}
+          <div class="mf-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% for error in field.errors %}
+              <div class="field-error">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <button class="btn-confirm" type="submit">Xabar yuborish</button>
+    </form>
+    <aside class="contact-panel">
+      <div class="sec-eyebrow">Tez aloqa</div>
+      <a class="contact-line" href="tel:+998712000000"><span>Telefon</span> +998 71 200 00 00</a>
+      <a class="contact-line" href="mailto:info@driveport.uz"><span>Email</span> info@driveport.uz</a>
+      <a class="contact-line" href="https://wa.me/998712000000"><span>Chat</span> WhatsApp</a>
+      <p class="wc-text">Murojaatlar ish vaqtida ko'rib chiqiladi. Aeroport, sana va avtomobil nomini yozsangiz, javob tezlashadi.</p>
+    </aside>
+  </div>
+</section>
+{% endblock %}

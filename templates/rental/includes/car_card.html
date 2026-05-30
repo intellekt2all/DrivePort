@@ -1,0 +1,25 @@
+<article class="car-card">
+  <a class="car-thumb" href="{{ car.get_absolute_url }}{% if selected_airport_id or arrival or departure %}?{% if selected_airport_id %}airport={{ selected_airport_id }}{% endif %}{% if arrival %}{% if selected_airport_id %}&{% endif %}arrival={{ arrival }}{% endif %}{% if departure %}{% if selected_airport_id or arrival %}&{% endif %}departure={{ departure }}{% endif %}{% endif %}">
+    {% if car.photo_url %}
+      <img src="{{ car.photo_url }}" alt="{{ car.name }}" loading="lazy">
+    {% endif %}
+  </a>
+  <div class="car-body">
+    <div class="car-type">{{ car.category }}</div>
+    <h3 class="car-name">
+      <a href="{{ car.get_absolute_url }}">{{ car.name }}</a>
+    </h3>
+    <div class="car-specs">
+      <div class="cs">{{ car.seats }} o'rin</div>
+      <div class="cs">{{ car.transmission }}</div>
+      <div class="cs">{{ car.fuel }}</div>
+    </div>
+    <div class="car-footer">
+      <div>
+        <div class="car-price-day">kuniga</div>
+        <div class="car-price-val"><sup>$</sup>{{ car.price_per_day|floatformat:0 }}</div>
+      </div>
+      <a class="btn-book" href="{% url 'booking_create' %}?car={{ car.pk }}{% if selected_airport_id %}&airport={{ selected_airport_id }}{% endif %}{% if arrival %}&arrival={{ arrival }}{% endif %}{% if departure %}&departure={{ departure }}{% endif %}">Bron</a>
+    </div>
+  </div>
+</article>

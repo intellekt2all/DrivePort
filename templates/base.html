@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}DrivePort - Aeroport mashina ijarasi{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'rental/css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav id="navbar">
+    <a class="nav-logo" href="{% url 'home' %}">Drive<b>Port</b></a>
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}#how">Qanday ishlaydi</a></li>
+      <li><a href="{% url 'car_list' %}">Mashinalar</a></li>
+      <li><a href="{% url 'about' %}">Biz haqimizda</a></li>
+      <li><a href="{% url 'contact' %}">Aloqa</a></li>
+    </ul>
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <a class="nav-link-pill" href="{% url 'profile' %}">Profil</a>
+      {% else %}
+        <a class="nav-link-pill" href="{% url 'login' %}">Kirish</a>
+      {% endif %}
+      <a class="nav-cta" href="{% url 'booking_create' %}">Bron qilish</a>
+      <button class="hamburger" id="hamburger" type="button" aria-label="Menu" data-mobile-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="{% url 'home' %}" data-mobile-close>Home</a>
+    <a href="{% url 'car_list' %}" data-mobile-close>Mashinalar</a>
+    <a href="{% url 'booking_create' %}" data-mobile-close>Bron qilish</a>
+    <a href="{% url 'about' %}" data-mobile-close>Biz haqimizda</a>
+    <a href="{% url 'contact' %}" data-mobile-close>Aloqa</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" data-mobile-close>Profil</a>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="btn-ghost mobile-logout" type="submit">Chiqish</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}" data-mobile-close>Kirish</a>
+      <a class="btn-gold mobile-action" href="{% url 'register' %}" data-mobile-close>Ro'yxatdan o'tish</a>
+    {% endif %}
+  </div>
+
+  {% if messages %}
+    <div class="flash-stack">
+      {% for message in messages %}
+        <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="logo" href="{% url 'home' %}">Drive<b>Port</b></a>
+          <p>Aeroportda topshiriladigan avtomobillar ijarasi. Safar sanasini tanlang, bronni rasmiylashtiring va kalitni terminal yaqinida qabul qiling.</p>
+          <div class="footer-socials">
+            <a class="fsoc text" href="https://t.me/" title="Telegram">TG</a>
+            <a class="fsoc text" href="https://instagram.com/" title="Instagram">IG</a>
+            <a class="fsoc text" href="https://wa.me/998712000000" title="WhatsApp">WA</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Xizmatlar</h5>
+          <ul>
+            <li><a href="{% url 'car_list' %}">Aeroport ijarasi</a></li>
+            <li><a href="{% url 'booking_create' %}">Uzoq muddatli bron</a></li>
+            <li><a href="{% url 'car_list' %}?type=Premium">Premium fleet</a></li>
+            <li><a href="{% url 'contact' %}">Korporativ so'rov</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Kompaniya</h5>
+          <ul>
+            <li><a href="{% url 'about' %}">Biz haqimizda</a></li>
+            <li><a href="{% url 'contact' %}">Hamkorlik</a></li>
+            <li><a href="{% url 'register' %}">Shaxsiy profil</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Aloqa</h5>
+          <ul>
+            <li><a href="tel:+998712000000">+998 71 200 00 00</a></li>
+            <li><a href="mailto:info@driveport.uz">info@driveport.uz</a></li>
+            <li><a href="{% url 'contact' %}">Menejerga yozish</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {% now "Y" %} DrivePort. Barcha huquqlar himoyalangan.</p>
+        <div class="footer-badges">
+          <span class="fbadge">Xavfsiz bron</span>
+          <span class="fbadge">24/7 qo&apos;llab-quvvatlash</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'rental/js/site.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

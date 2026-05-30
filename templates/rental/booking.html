@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Bron qilish - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Bron</div>
+    <h1 class="hero-h1 small">Mashina va aeroportni <span class="gold">tasdiqlang</span></h1>
+    <p class="hero-p">Forma yuborilgach bron yozuvi yaratiladi va tasdiqlangan buyurtma uchun alohida bron raqami shakllanadi.</p>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="section-inner narrow">
+    <form class="form-panel" method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="form-grid">
+        {% for field in form %}
+          <div class="mf-group {% if field.name == 'note' %}full{% endif %}">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+            {% for error in field.errors %}
+              <div class="field-error">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="price-note">
+        Jami summa bron yaratilganda mashina narxi, kunlar soni va 10% servis to'lovi asosida hisoblanadi.
+      </div>
+      <button class="btn-confirm" type="submit">Bronni tasdiqlash</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

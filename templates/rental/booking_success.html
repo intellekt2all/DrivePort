@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Bron tasdiqlandi - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="section-inner narrow">
+    <div class="success-panel">
+      <div class="sec-eyebrow">Bron tasdiqlandi</div>
+      <h1 class="sec-title">{{ booking.booking_code }}</h1>
+      <p class="sec-sub">Bron raqamini qabul qilish nuqtasida menejerga taqdim eting.</p>
+      <div class="receipt">
+        <div><span>Mashina</span><strong>{{ booking.car.name }}</strong></div>
+        <div><span>Aeroport</span><strong>{{ booking.airport.city }} ({{ booking.airport.code }})</strong></div>
+        <div><span>Sana</span><strong>{{ booking.arrival_date }} - {{ booking.departure_date }}</strong></div>
+        <div><span>Kun</span><strong>{{ booking.days }}</strong></div>
+        <div><span>Servis</span><strong>${{ booking.service_fee }}</strong></div>
+        <div><span>Jami</span><strong>${{ booking.total_price }}</strong></div>
+      </div>
+      <div class="hero-btns centered">
+        {% if user.is_authenticated %}
+          <a class="btn-gold" href="{% url 'profile' %}">Profilga o'tish</a>
+        {% else %}
+          <a class="btn-gold" href="{% url 'register' %}">Akkaunt yaratish</a>
+        {% endif %}
+        <a class="btn-ghost" href="{% url 'car_list' %}">Yana mashina ko'rish</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ car.name }} - DrivePort{% endblock %}
+
+{% block content %}
+<section class="detail-hero">
+  <div class="section-inner detail-grid">
+    <div class="detail-media">
+      {% if car.photo_url %}
+        <img src="{{ car.photo_url }}" alt="{{ car.name }}">
+      {% endif %}
+    </div>
+    <div class="detail-copy">
+      <div class="sec-eyebrow">{{ car.category }}</div>
+      <h1 class="hero-h1 small">{{ car.name }}</h1>
+      <p class="hero-p">{{ car.description }}</p>
+      <div class="detail-specs">
+        <span> {{ car.seats }} o'rin</span>
+        <span>{{ car.transmission }}</span>
+        <span>{{ car.fuel }}</span>
+      </div>
+      <div class="detail-price">
+        <span>kuniga</span>
+        <strong>${{ car.price_per_day|floatformat:0 }}</strong>
+      </div>
+      <div class="hero-btns">
+        <a class="btn-gold" href="{% url 'booking_create' %}?car={{ car.pk }}{% if airport %}&airport={{ airport }}{% endif %}{% if arrival %}&arrival={{ arrival }}{% endif %}{% if departure %}&departure={{ departure }}{% endif %}">Shu mashinani bron qilish</a>
+        <a class="btn-ghost" href="{% url 'car_list' %}">Boshqa mashinalar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if similar_cars %}
+<section class="section">
+  <div class="section-inner">
+    <div class="sec-eyebrow">O'xshash</div>
+    <h2 class="sec-title">Yana <span class="gold">{{ car.category }}</span> tanlovlar</h2>
+    <div class="cars-grid">
+      {% for car in similar_cars %}
+        {% include "rental/includes/car_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

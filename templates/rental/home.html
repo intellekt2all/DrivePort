@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}DrivePort - Aeroportda tayyor mashina{% endblock %}
+
+{% block content %}
+<section id="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-pill">Aeroportdan ishonchli ijara</div>
+      <h1 class="hero-h1">
+        Safaringiz uchun<br>
+        <span class="gold">avtomobil</span><br>
+        oldindan tayyor
+      </h1>
+      <p class="hero-p">
+        DrivePort aeroport terminali yaqinida avtomobil qabul qilish va qaytarishni oldindan rejalashtiradi. Safar sanasini kiriting, mos klassni tanlang va bron tafsilotlarini tasdiqlang.
+      </p>
+      <div class="hero-btns">
+        <a class="btn-gold" href="{% url 'booking_create' %}">Bronni boshlash</a>
+        <a class="btn-ghost" href="#how">Jarayonni ko'rish</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hstat-num">47+</div>
+          <div class="hstat-label">xizmat nuqtasi</div>
+        </div>
+        <div>
+          <div class="hstat-num">24/7</div>
+          <div class="hstat-label">mijozlar xizmati</div>
+        </div>
+        <div>
+          <div class="hstat-num">10%</div>
+          <div class="hstat-label">servis shartlari ochiq</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-photo-frame">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=80" alt="Aeroport terminali oldida kutayotgan mashina">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="booking-wrap">
+    <div class="booking-tabs">
+      <span class="btab active">Aeroportda qabul qilish</span>
+      <span class="btab">Aeroportda qaytarish</span>
+    </div>
+    <form class="booking-form" method="get" action="{% url 'car_list' %}">
+      <div class="bf-group">
+        <label for="homeAirport">Aeroport</label>
+        <select id="homeAirport" name="airport">
+          <option value="">Aeroportni tanlang...</option>
+          {% for airport in airports %}
+            <option value="{{ airport.pk }}">{{ airport.city }} ({{ airport.code }}) - {{ airport.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="bf-group">
+        <label for="homeArrival">Kelish</label>
+        <input id="homeArrival" type="date" name="arrival" data-default-days="4">
+      </div>
+      <div class="bf-group">
+        <label for="homeDeparture">Ketish</label>
+        <input id="homeDeparture" type="date" name="departure" data-default-days="8">
+      </div>
+      <div class="bf-group">
+        <label for="homeType">Tur</label>
+        <select id="homeType" name="type">
+          <option value="">Barcha turlar</option>
+          {% for value, label in categories %}
+            <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button class="bf-search" type="submit">Mashina qidirish</button>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Jarayon</div>
+    <h2 class="sec-title">Atigi <span class="gold">4 qadam</span></h2>
+    <p class="sec-sub">Ijara jarayoni aniq bosqichlarga bo&apos;lingan: so&apos;rov, tasdiqlash, qabul qilish va qaytarish.</p>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num-wrap"><span>01</span></div>
+        <h3>So&apos;rov yuborasiz</h3>
+        <p>Aeroport, avtomobil klassi, qabul qilish va qaytarish sanalarini kiritasiz.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span>02</span></div>
+        <h3>Bron tasdiqlanadi</h3>
+        <p>Menejer ma&apos;lumotlarni tekshiradi. Tasdiqlangan bron uchun shaxsiy bron raqami shakllanadi.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span>03</span></div>
+        <h3>Avtomobilni qabul qilasiz</h3>
+        <p>Terminal yaqinidagi kelishilgan nuqtada hujjatlar tekshiriladi va avtomobil topshiriladi.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span>04</span></div>
+        <h3>Safardan keyin qaytarasiz</h3>
+        <p>Avtomobil kelishilgan sana va manzilda qabul qilinadi. Holat tekshiruvi shaffof rasmiylashtiriladi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cars">
+  <div class="section-inner">
+    <div class="section-headline">
+      <div>
+        <div class="sec-eyebrow">Fleet</div>
+        <h2 class="sec-title">Tanlangan <span class="gold">mashinalar</span></h2>
+      </div>
+      <a class="btn-ghost" href="{% url 'car_list' %}">Hammasi</a>
+    </div>
+    <div class="cars-grid">
+      {% for car in cars %}
+        {% include "rental/includes/car_card.html" %}
+      {% empty %}
+        <div class="empty-state">Hozircha mavjud avtomobillar ko'rsatilmagan. Iltimos, birozdan keyin qayta tekshiring.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-surface" id="why">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Ustunliklar</div>
+    <h2 class="sec-title">Nima uchun <span class="gold">DrivePort?</span></h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="wc-title">Aeroportga mos logistika</div>
+        <p class="wc-text">Bron parvoz vaqti, qabul qilish nuqtasi va qaytarish sanasi bo'yicha rejalashtiriladi.</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-title">Tekshirilgan park</div>
+        <p class="wc-text">Har bir avtomobil klassi, mavjud sanalari va asosiy shartlari katalogda oldindan ko'rsatiladi.</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-title">Rasmiylashtirish tartibli</div>
+        <p class="wc-text">Kunlik tarif, muddat va qo'shimcha talablar bir joyda jamlanadi va bron bilan birga saqlanadi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="airports">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Joylashuvlar</div>
+    <h2 class="sec-title">Xizmat <span class="gold">aeroportlari</span></h2>
+    <div class="airports-list">
+      {% for airport in airports %}
+        <a class="atag" href="{% url 'car_list' %}?airport={{ airport.pk }}">
+          <span class="atag-code">{{ airport.code }}</span> {{ airport.city }} - {{ airport.name }}
+        </a>
+      {% empty %}
+        <span class="atag atag-coming">Aeroportlar ro&apos;yxati yangilanmoqda</span>
+      {% endfor %}
+      <span class="atag atag-coming">Yangi yo'nalishlar tayyorlanmoqda</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section-surface" id="reviews">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Mijozlar</div>
+    <h2 class="sec-title">Ular nima <span class="gold">deyishdi?</span></h2>
+    <div class="reviews-grid">
+      {% for review in reviews %}
+        <article class="review-card">
+          <div class="rc-stars">{{ review.stars }}</div>
+          <p class="rc-text">"{{ review.text }}"</p>
+          <div class="rc-author">
+            <div class="rc-avatar">{{ review.avatar }}</div>
+            <div>
+              <div class="rc-name">{{ review.name }}</div>
+              <div class="rc-country">{{ review.country }}</div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-text">
+      <h2>Keyingi safaringiz uchun<br>avtomobilni oldindan bron qiling</h2>
+      <p>Aeroport, sana va avtomobil klassini kiriting. Menejer bron tafsilotlarini tasdiqlaydi.</p>
+    </div>
+    <div class="cta-btns">
+      <a class="btn-gold" href="{% url 'booking_create' %}">Bron qilish</a>
+      <a class="btn-ghost" href="{% url 'contact' %}">Aloqa</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

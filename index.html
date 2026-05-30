@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrivePort — Aeroport Mashina Ijarasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   RESET & VARIABLES
+=========================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:       #080810;
+  --surface:  #10101e;
+  --surface2: #18182a;
+  --border:   rgba(255,255,255,0.08);
+  --gold:     #c9a84c;
+  --gold2:    #e8c96a;
+  --gold-dim: rgba(201,168,76,0.12);
+  --white:    #ffffff;
+  --gray:     #8a8aa0;
+  --gray2:    #5a5a70;
+  --red:      #e05a5a;
+  --green:    #4ecb71;
+  --radius:   14px;
+  --shadow:   0 24px 80px rgba(0,0,0,0.5);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: default;
+}
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: 'DM Sans', sans-serif; }
+input, select { font-family: 'DM Sans', sans-serif; }
+img { display: block; max-width: 100%; }
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* ===========================
+   NAVIGATION
+=========================== */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 68px;
+  background: rgba(8,8,16,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+}
+.nav-logo b { color: var(--gold); font-weight: 800; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  font-size: 14px; color: var(--gray);
+  transition: color 0.2s; font-weight: 500;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-lang {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--gray); padding: 7px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.nav-lang:hover { color: var(--white); border-color: var(--gold); }
+.nav-cta {
+  background: var(--gold); color: var(--bg);
+  padding: 9px 22px; border-radius: 9px;
+  font-size: 14px; font-weight: 700; border: none;
+  transition: all 0.2s;
+}
+.nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+
+/* ===========================
+   HERO
+=========================== */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 100px 48px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-glow {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.hero-glow::before {
+  content: '';
+  position: absolute; top: -10%; right: -5%;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%);
+  border-radius: 50%;
+}
+.hero-glow::after {
+  content: '';
+  position: absolute; bottom: 0; left: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(74,100,217,0.05) 0%, transparent 65%);
+  border-radius: 50%;
+}
+/* Animated dots background */
+.hero-dots {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+}
+.hero-left {}
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.25);
+  padding: 7px 16px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; color: var(--gold);
+  letter-spacing: 0.3px; margin-bottom: 28px;
+  animation: fadeUp 0.7s ease both;
+}
+.hero-pill::before { content: '✈'; }
+.hero-h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(40px, 5.5vw, 72px);
+  font-weight: 800; line-height: 1.04;
+  letter-spacing: -2.5px;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+.hero-h1 .gold { color: var(--gold); }
+.hero-p {
+  margin-top: 22px; font-size: 16px; color: var(--gray);
+  line-height: 1.75; max-width: 440px; font-weight: 300;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+.hero-btns {
+  margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+.btn-gold {
+  background: var(--gold); color: var(--bg);
+  padding: 13px 28px; border-radius: 10px;
+  font-size: 15px; font-weight: 700; border: none;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s;
+}
+.btn-gold:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
+.btn-ghost {
+  background: none; border: 1px solid var(--border);
+  color: var(--white); padding: 13px 24px; border-radius: 10px;
+  font-size: 15px; font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+.hero-stats {
+  margin-top: 52px; display: flex; gap: 36px;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.hstat-num {
+  font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: var(--gold);
+}
+.hstat-label { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+/* Hero Right — Car Visual */
+.hero-right {
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeLeft 0.9s 0.2s ease both;
+  position: relative;
+}
+.car-visual {
+  width: 100%; max-width: 560px;
+  position: relative;
+}
+.car-visual svg { width: 100%; height: auto; filter: drop-shadow(0 30px 60px rgba(201,168,76,0.18)); }
+.floating-badge {
+  position: absolute; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 16px; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow);
+  animation: float 3s ease-in-out infinite;
+}
+.fb1 { top: 10%; left: -5%; animation-delay: 0s; }
+.fb2 { bottom: 15%; right: -5%; animation-delay: 1.5s; }
+.fb-icon { font-size: 20px; }
+.fb-text { line-height: 1.3; }
+.fb-text strong { display: block; font-size: 14px; }
+.fb-text span { color: var(--gray); font-size: 11px; }
+
+/* ===========================
+   BOOKING SECTION
+=========================== */
+#booking {
+  padding: 0 48px 80px;
+  position: relative; z-index: 10;
+}
+.booking-wrap {
+  max-width: 1200px; margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 20px; padding: 36px 40px;
+  box-shadow: var(--shadow);
+}
+.booking-tabs {
+  display: flex; gap: 4px; margin-bottom: 28px;
+  background: var(--surface2); border-radius: 10px; padding: 4px;
+  width: fit-content;
+}
+.btab {
+  padding: 8px 20px; border-radius: 8px; border: none;
+  font-size: 14px; font-weight: 600; background: none;
+  color: var(--gray); transition: all 0.2s;
+}
+.btab.active { background: var(--gold); color: var(--bg); }
+.btab:not(.active):hover { color: var(--white); }
+.booking-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 14px; align-items: end;
+}
+.bf-group { display: flex; flex-direction: column; gap: 7px; }
+.bf-group label {
+  font-size: 11px; font-weight: 600; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 0.9px;
+}
+.bf-group input, .bf-group select {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 15px;
+  color: var(--white); font-size: 14px; outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%; appearance: none; -webkit-appearance: none;
+}
+.bf-group input:focus, .bf-group select:focus {
+  border-color: var(--gold); background: rgba(201,168,76,0.04);
+}
+.bf-group input::placeholder { color: var(--gray2); }
+.bf-group select option { background: var(--surface); }
+.bf-search {
+  background: var(--gold); color: var(--bg);
+  border: none; border-radius: 10px;
+  padding: 12px 24px; font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.bf-search:hover { background: var(--gold2); transform: translateY(-1px); }
+
+/* ===========================
+   SECTION COMMONS
+=========================== */
+.section { padding: 90px 48px; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.sec-eyebrow {
+  font-size: 11px; font-weight: 700; color: var(--gold);
+  letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 12px;
+}
+.sec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 800; letter-spacing: -1.5px; line-height: 1.08;
+}
+.sec-title .gold { color: var(--gold); }
+.sec-sub { margin-top: 14px; color: var(--gray); font-size: 16px; max-width: 520px; font-weight: 300; }
+
+/* ===========================
+   HOW IT WORKS
+=========================== */
+#how { background: linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.025) 50%, transparent 100%); }
+.steps-grid {
+  margin-top: 56px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  position: relative;
+}
+.steps-grid::before {
+  content: '';
+  position: absolute; top: 44px; left: calc(12.5% + 10px); right: calc(12.5% + 10px);
+  height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold-dim), transparent);
+}
+.step-item { padding: 32px 24px; text-align: center; position: relative; }
+.step-num-wrap {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; position: relative; z-index: 2;
+  transition: all 0.3s;
+}
+.step-item:hover .step-num-wrap { background: var(--gold-dim); border-color: rgba(201,168,76,0.4); }
+.step-num-wrap span { font-size: 22px; }
+.step-item h3 {
+  font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 10px;
+}
+.step-item p { font-size: 13px; color: var(--gray); line-height: 1.7; }
+
+/* ===========================
+   CARS
+=========================== */
+#cars {}
+.cars-filter {
+  margin-top: 40px; display: flex; gap: 8px; flex-wrap: wrap;
+}
+.cfilter {
+  padding: 8px 18px; border-radius: 100px; border: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; background: none; color: var(--gray);
+  transition: all 0.2s;
+}
+.cfilter.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+.cfilter:not(.active):hover { border-color: rgba(255,255,255,0.2); color: var(--white); }
+.cars-grid {
+  margin-top: 28px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.car-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer; position: relative;
+}
+.car-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201,168,76,0.35);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.car-thumb {
+  height: 185px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--surface2) 0%, rgba(201,168,76,0.04) 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.car-thumb-emoji { font-size: 88px; user-select: none; transition: transform 0.4s; }
+.car-card:hover .car-thumb-emoji { transform: scale(1.1) translateX(6px); }
+.car-thumb::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to top, var(--surface), transparent);
+}
+.car-badge-wrap { position: absolute; top: 14px; right: 14px; }
+.cbadge {
+  background: var(--gold); color: var(--bg);
+  font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+  padding: 4px 10px; border-radius: 100px; text-transform: uppercase;
+}
+.cbadge.new { background: var(--green); color: #fff; }
+.cbadge.lux { background: #9b6de0; }
+.car-body { padding: 18px 20px 22px; }
+.car-type { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+.car-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 13px; }
+.car-specs { display: flex; gap: 14px; margin-bottom: 18px; }
+.cs { font-size: 12px; color: var(--gray); display: flex; align-items: center; gap: 5px; }
+.car-footer { display: flex; align-items: flex-end; justify-content: space-between; }
+.car-price-day { font-size: 11px; color: var(--gray2); margin-bottom: 2px; }
+.car-price-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--gold); }
+.car-price-val sup { font-size: 14px; vertical-align: super; }
+.btn-book {
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold); padding: 9px 20px; border-radius: 9px;
+  font-size: 13px; font-weight: 700;
+  transition: all 0.2s;
+}
+.car-card:hover .btn-book { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+
+/* ===========================
+   WHY DRIVEPORT
+=========================== */
+#why { background: var(--surface); }
+.why-grid {
+  margin-top: 56px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.why-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.why-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-4px); }
+.wc-icon { font-size: 30px; margin-bottom: 16px; display: block; }
+.wc-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.wc-text { font-size: 14px; color: var(--gray); line-height: 1.65; }
+
+/* ===========================
+   AIRPORTS
+=========================== */
+#airports {}
+.airports-list {
+  margin-top: 48px;
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.atag {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; padding: 10px 18px;
+  font-size: 13px; font-weight: 500;
+  transition: all 0.2s; cursor: pointer;
+}
+.atag:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.atag-code { color: var(--gold); font-weight: 800; font-size: 12px; }
+.atag-coming {
+  background: none; border: 1px dashed rgba(255,255,255,0.1);
+  color: var(--gray2); cursor: default;
+}
+.atag-coming:hover { border-color: rgba(255,255,255,0.1); color: var(--gray2); }
+
+/* ===========================
+   REVIEWS
+=========================== */
+#reviews { background: var(--surface); }
+.reviews-grid {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.review-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.rc-stars { color: var(--gold); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+.rc-text { font-size: 14px; color: var(--gray); line-height: 1.7; margin-bottom: 18px; font-style: italic; }
+.rc-author { display: flex; align-items: center; gap: 12px; }
+.rc-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.rc-name { font-size: 14px; font-weight: 600; }
+.rc-country { font-size: 12px; color: var(--gray); }
+
+/* ===========================
+   CTA BANNER
+=========================== */
+#cta { padding: 80px 48px; }
+.cta-inner {
+  max-width: 1200px; margin: 0 auto;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.04) 100%);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 24px; padding: 64px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 40px; position: relative; overflow: hidden;
+}
+.cta-inner::before {
+  content: ''; font-size: 200px; position: absolute;
+  right: -20px; bottom: -30px; opacity: 0.06; user-select: none;
+  line-height: 1;
+}
+.cta-text {}
+.cta-text h2 {
+  font-family: 'Syne', sans-serif; font-size: clamp(26px, 3vw, 40px);
+  font-weight: 800; letter-spacing: -1px;
+}
+.cta-text p { margin-top: 10px; color: var(--gray); font-size: 15px; font-weight: 300; }
+.cta-btns { display: flex; gap: 12px; flex-wrap: wrap; flex-shrink: 0; }
+
+/* ===========================
+   FOOTER
+=========================== */
+footer {
+  padding: 64px 48px 36px;
+  border-top: 1px solid var(--border);
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+.footer-brand {}
+.footer-brand .logo {
+  font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+  margin-bottom: 14px; display: block;
+}
+.footer-brand p { font-size: 14px; color: var(--gray); line-height: 1.7; max-width: 240px; }
+.footer-socials { display: flex; gap: 10px; margin-top: 20px; }
+.fsoc {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.2s;
+}
+.fsoc:hover { border-color: rgba(201,168,76,0.4); background: var(--gold-dim); }
+.footer-col h5 {
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  margin-bottom: 18px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.footer-col a { font-size: 14px; color: var(--gray); transition: color 0.2s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 28px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.footer-bottom p { font-size: 13px; color: var(--gray2); }
+.footer-badges { display: flex; gap: 8px; }
+.fbadge {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--gray);
+}
+
+/* ===========================
+   MODAL
+=========================== */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.82); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--surface); border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 22px; padding: 36px 40px;
+  max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;
+  transform: translateY(24px); transition: transform 0.35s;
+  scrollbar-width: thin;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 24px;
+}
+.modal-head h3 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+.modal-close {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--gray); width: 34px; height: 34px; border-radius: 8px;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+.modal-car-preview {
+  background: linear-gradient(135deg, var(--gold-dim), transparent);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 14px; padding: 18px;
+  display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+}
+.mcp-emoji { font-size: 52px; line-height: 1; }
+.mcp-info {}
+.mcp-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+.mcp-meta { font-size: 13px; color: var(--gray); margin-top: 4px; }
+.mcp-price { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); margin-top: 4px; }
+
+.modal-form { display: flex; flex-direction: column; gap: 14px; }
+.mf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mf-group { display: flex; flex-direction: column; gap: 7px; }
+.mf-group.full { grid-column: 1 / -1; }
+.mf-group label {
+  font-size: 11px; font-weight: 700; color: var(--gray);
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.mf-group input, .mf-group select {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  color: var(--white); font-size: 14px; outline: none;
+  transition: border-color 0.2s; width: 100%;
+  appearance: none; -webkit-appearance: none;
+}
+.mf-group input:focus, .mf-group select:focus { border-color: var(--gold); }
+.mf-group input::placeholder { color: var(--gray2); }
+.mf-group select option { background: var(--surface); }
+
+.price-box {
+  background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 12px; padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pb-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--gray); }
+.pb-total {
+  display: flex; justify-content: space-between;
+  border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px;
+  font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; color: var(--gold);
+}
+.btn-confirm {
+  background: var(--gold); color: var(--bg);
+  border: none; border-radius: 12px; padding: 15px;
+  font-size: 16px; font-weight: 800; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+}
+.btn-confirm:hover { background: var(--gold2); transform: translateY(-1px); }
+
+/* Success */
+.modal-success {
+  display: none; flex-direction: column; align-items: center;
+  text-align: center; gap: 16px; padding: 20px 0;
+}
+.ms-icon { font-size: 64px; animation: popIn 0.5s ease; }
+.ms-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; }
+.ms-sub { color: var(--gray); font-size: 14px; }
+.ms-id {
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 12px; padding: 14px 24px;
+  font-family: 'Courier New', monospace; font-size: 22px;
+  color: var(--gold); letter-spacing: 3px; font-weight: 700;
+}
+.ms-note {
+  font-size: 13px; color: var(--gray); line-height: 1.6;
+  background: var(--surface2); border-radius: 10px; padding: 12px 16px;
+}
+
+/* ===========================
+   TOAST
+=========================== */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 2000;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 500; box-shadow: var(--shadow);
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 20px; }
+
+/* ===========================
+   MOBILE NAV DRAWER
+=========================== */
+.mobile-nav {
+  position: fixed; inset: 0; z-index: 998;
+  background: var(--surface); padding: 80px 28px 40px;
+  transform: translateX(-100%); transition: transform 0.35s ease;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a {
+  display: block; padding: 14px 0; font-size: 20px;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  border-bottom: 1px solid var(--border); color: var(--white);
+  transition: color 0.2s;
+}
+.mobile-nav a:hover { color: var(--gold); }
+.mobile-nav .btn-gold { margin-top: 20px; justify-content: center; font-size: 16px; padding: 15px; }
+
+/* ===========================
+   ANIMATIONS
+=========================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes popIn {
+  0%   { transform: scale(0.4); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 1100px) {
+  .cars-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps-grid::before { display: none; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  #navbar { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-right .nav-lang { display: none; }
+  .hamburger { display: flex; }
+  #hero { padding: 100px 20px 60px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  #booking { padding: 0 20px 60px; }
+  .booking-form { grid-template-columns: 1fr 1fr; }
+  .booking-wrap { padding: 24px 20px; }
+  .section { padding: 64px 20px; }
+  #cta { padding: 48px 20px; }
+  .cta-inner { flex-direction: column; text-align: center; padding: 40px 28px; }
+  .cta-btns { justify-content: center; }
+  footer { padding: 48px 20px 28px; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 600px) {
+  .cars-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .booking-form { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; gap: 20px; }
+  .modal-box { padding: 24px 20px; }
+  .mf-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== NAVBAR ====== -->
+<nav id="navbar">
+  <div class="nav-logo">Drive<b>Port</b></div>
+  <ul class="nav-links">
+    <li><a href="#how">Qanday ishlaydi</a></li>
+    <li><a href="#cars">Mashinalar</a></li>
+    <li><a href="#airports">Aeroportlar</a></li>
+    <li><a href="#reviews">Fikrlar</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-lang" onclick="toggleLang()">🌐 UZ</button>
+    <button class="nav-cta" onclick="scrollTo('#booking')">Bron qilish</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#how" onclick="closeMobileNav()">Qanday ishlaydi</a>
+  <a href="#cars" onclick="closeMobileNav()">Mashinalar</a>
+  <a href="#airports" onclick="closeMobileNav()">Aeroportlar</a>
+  <a href="#reviews" onclick="closeMobileNav()">Fikrlar</a>
+  <button class="btn-gold" onclick="closeMobileNav(); scrollTo('#booking')">🚗 Bron qilish</button>
+</div>
+
+<!-- ====== HERO ====== -->
+<section id="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-pill">Taxi yo'q — Muammo yo'q</div>
+      <h1 class="hero-h1">
+        Aeroportda<br>
+        seni <span class="gold">mashina</span><br>
+        kutib turadi
+      </h1>
+      <p class="hero-p">
+        O'z yurtingdan turib aeroport mashinasini bron qil. Yetib kelding — mashina tayyor. Qaytib ketding — topshirding. Hamma gap shu.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-gold" onclick="scrollTo('#booking')">🚗 Hozir bron qil</button>
+        <button class="btn-ghost" onclick="scrollTo('#how')">Qanday ishlaydi →</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hstat-num">47+</div>
+          <div class="hstat-label">Shahar / Aeroport</div>
+        </div>
+        <div>
+          <div class="hstat-num">12K+</div>
+          <div class="hstat-label">Mamnun mijoz</div>
+        </div>
+        <div>
+          <div class="hstat-num">4.9★</div>
+          <div class="hstat-label">Reyting</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="car-visual">
+        <!-- SVG Car Illustration -->
+        <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="600" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#a07830"/>
+              <stop offset="50%" stop-color="#c9a84c"/>
+              <stop offset="100%" stop-color="#8a6020"/>
+            </linearGradient>
+            <linearGradient id="roofGrad" x1="0" y1="0" x2="600" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#c9a84c"/>
+              <stop offset="100%" stop-color="#e8c96a"/>
+            </linearGradient>
+            <radialGradient id="shadowGrad" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="glow2" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Ground shadow -->
+          <ellipse cx="300" cy="298" rx="240" ry="16" fill="url(#shadowGrad)"/>
+          <!-- Body -->
+          <path d="M50 220 L90 155 Q130 100 200 92 L390 88 Q470 88 510 130 L565 200 L575 220 Z" fill="url(#bodyGrad)" filter="url(#glow2)"/>
+          <!-- Roof -->
+          <path d="M145 155 Q175 110 225 103 L370 100 Q430 100 465 132 L520 158 Z" fill="url(#roofGrad)"/>
+          <!-- Windshield -->
+          <path d="M155 152 Q180 118 228 111 L355 108 L355 153 Z" fill="#0a0a2a" opacity="0.82"/>
+          <!-- Side window -->
+          <path d="M368 107 L460 110 Q488 118 508 140 L508 153 L368 153 Z" fill="#0a0a2a" opacity="0.82"/>
+          <!-- Window divider -->
+          <rect x="360" y="104" width="5" height="52" rx="2" fill="#c9a84c"/>
+          <!-- Side detail line -->
+          <path d="M52 200 Q300 210 575 198" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" fill="none"/>
+          <!-- Door lines -->
+          <line x1="240" y1="158" x2="232" y2="220" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+          <line x1="400" y1="155" x2="398" y2="220" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+          <!-- Wheels -->
+          <circle cx="175" cy="240" r="52" fill="#151520" stroke="#c9a84c" stroke-width="4"/>
+          <circle cx="175" cy="240" r="32" fill="#0d0d18" stroke="#8a6020" stroke-width="2"/>
+          <circle cx="175" cy="240" r="13" fill="#c9a84c"/>
+          <!-- Wheel spokes -->
+          <line x1="175" y1="208" x2="175" y2="224" stroke="#8a6020" stroke-width="3"/>
+          <line x1="175" y1="256" x2="175" y2="272" stroke="#8a6020" stroke-width="3"/>
+          <line x1="143" y1="240" x2="159" y2="240" stroke="#8a6020" stroke-width="3"/>
+          <line x1="191" y1="240" x2="207" y2="240" stroke="#8a6020" stroke-width="3"/>
+          <circle cx="430" cy="240" r="52" fill="#151520" stroke="#c9a84c" stroke-width="4"/>
+          <circle cx="430" cy="240" r="32" fill="#0d0d18" stroke="#8a6020" stroke-width="2"/>
+          <circle cx="430" cy="240" r="13" fill="#c9a84c"/>
+          <line x1="430" y1="208" x2="430" y2="224" stroke="#8a6020" stroke-width="3"/>
+          <line x1="430" y1="256" x2="430" y2="272" stroke="#8a6020" stroke-width="3"/>
+          <line x1="398" y1="240" x2="414" y2="240" stroke="#8a6020" stroke-width="3"/>
+          <line x1="446" y1="240" x2="462" y2="240" stroke="#8a6020" stroke-width="3"/>
+          <!-- Headlight -->
+          <ellipse cx="566" cy="188" rx="14" ry="8" fill="#fffde0" opacity="0.95"/>
+          <ellipse cx="566" cy="188" rx="24" ry="14" fill="#c9a84c" opacity="0.15"/>
+          <!-- Taillight -->
+          <rect x="48" y="188" width="20" height="12" rx="4" fill="#e05a5a" opacity="0.85"/>
+          <!-- Road line -->
+          <rect x="0" y="290" width="600" height="8" rx="4" fill="#18182a" opacity="0.7"/>
+          <rect x="80" y="292" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+          <rect x="260" y="292" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+          <rect x="440" y="292" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+        </svg>
+        <!-- Floating badges -->
+        <div class="floating-badge fb1">
+          <span class="fb-icon"></span>
+          <div class="fb-text">
+            <strong>Bron tasdiqlandi</strong>
+            <span>DP-K8X2M9</span>
+          </div>
+        </div>
+        <div class="floating-badge fb2">
+          <span class="fb-icon"></span>
+          <div class="fb-text">
+            <strong>Mashina tayyor</strong>
+            <span>Terminal B, Stend 4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== BOOKING FORM ====== -->
+<section id="booking">
+  <div class="booking-wrap" style="max-width:1200px;margin:0 auto;">
+    <div class="booking-tabs">
+      <button class="btab active" onclick="setTab(this,'oneway')">✈ Bir tomonga</button>
+      <button class="btab" onclick="setTab(this,'roundtrip')">↔ Borib-kelish</button>
+      <button class="btab" onclick="setTab(this,'longterm')">📅 Uzoq muddatli</button>
+    </div>
+    <div class="booking-form">
+      <div class="bf-group">
+        <label>Aeroport</label>
+        <select id="bfAirport">
+          <option value="">Aeroportni tanlang...</option>
+          <option>Toshkent (TAS) — Islom Karimov xalqaro</option>
+          <option>Samarqand (SKD)</option>
+          <option>Buxoro (BHK)</option>
+          <option>Andijon (AZN)</option>
+          <option>Namangan (NMA)</option>
+          <option>Farg'ona (FEG)</option>
+          <option>Nukus (NCU)</option>
+          <option>Istanbul (IST) — Atatürk</option>
+          <option>Dubai (DXB) — International</option>
+          <option>Moscow (SVO) — Sheremetyevo</option>
+          <option>Frankfurt (FRA)</option>
+          <option>Almaty (ALA)</option>
+        </select>
+      </div>
+      <div class="bf-group">
+        <label>Kelish sanasi</label>
+        <input type="date" id="bfArrival">
+      </div>
+      <div class="bf-group">
+        <label>Ketish sanasi</label>
+        <input type="date" id="bfDeparture">
+      </div>
+      <div class="bf-group">
+        <label>Mashina turi</label>
+        <select id="bfType">
+          <option value="all">Barcha turlar</option>
+          <option value="Sedan">Sedan</option>
+          <option value="SUV">SUV / Crossover</option>
+          <option value="Minivan">Minivan</option>
+          <option value="Premium">Premium</option>
+          <option value="Elektr">Elektr</option>
+        </select>
+      </div>
+      <div>
+        <button class="bf-search" onclick="doSearch()">
+          <span>🔍</span> Qidirish
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== HOW IT WORKS ====== -->
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Jarayon</div>
+    <h2 class="sec-title">Atigi <span class="gold">4 qadam</span></h2>
+    <p class="sec-sub">Murakkab jarayonlar yo'q. Bron qil, kel, ol, qaytar — hammasi shu.</p>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num-wrap"><span>🌍</span></div>
+        <h3>O'z yurtingdan bron qil</h3>
+        <p>Sayohatinggacha bo'lgan istalgan vaqtda saytga kirib aeroportni, mashinani va sanalarni tanlaysiz. 5 daqiqa!</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span>💳</span></div>
+        <h3>To'lov & Tasdiqnoma</h3>
+        <p>Xavfsiz to'lov tizimi orqali to'lov qiling. Bron ID emailingizga va telefoningizga darhol keladi.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span></span></div>
+        <h3>Aeroportga kelib, ol</h3>
+        <p>Aeroportdan chiqayotganda DrivePort stendiga boring. Hujjat + Bron ID ko'rsating — kalit sizniki!</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-wrap"><span></span></div>
+        <h3>Qaytib topshiring</h3>
+        <p>Ketayotganda mashinani aeroportdagi bizning nuqtamizga topshiring. Hech qanday qo'shimcha to'lov yo'q.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CARS ====== -->
+<section class="section" id="cars" style="padding-top: 20px;">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Fleet</div>
+    <h2 class="sec-title">Barcha <span class="gold">mashinalar</span></h2>
+    <div class="cars-filter">
+      <button class="cfilter active" onclick="filterCars('all', this)">Barchasi</button>
+      <button class="cfilter" onclick="filterCars('Sedan', this)">Sedan</button>
+      <button class="cfilter" onclick="filterCars('SUV', this)">SUV</button>
+      <button class="cfilter" onclick="filterCars('Premium', this)">Premium</button>
+      <button class="cfilter" onclick="filterCars('Minivan', this)">Minivan</button>
+      <button class="cfilter" onclick="filterCars('Elektr', this)">⚡ Elektr</button>
+    </div>
+    <div class="cars-grid" id="carsGrid"></div>
+  </div>
+</section>
+
+<!-- ====== WHY ====== -->
+<section class="section" id="why">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Ustunliklar</div>
+    <h2 class="sec-title">Nima uchun <span class="gold">DrivePort?</span></h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">Taxi yo'q — Erkinlik bor</div>
+        <p class="wc-text">Begona shahar taxichilaridan bezor bo'lmaysiz. O'z mashinangizda o'z jadvalingizda harakat qiling.</p>
+      </div>
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">To'liq Sug'urta</div>
+        <p class="wc-text">Har bir mashina keng qamrovli sug'urta bilan keladi. Har qanday holat uchun himoyalangansiz.</p>
+      </div>
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">Aniq Narx — Yashirin To'lov Yo'q</div>
+        <p class="wc-text">Bronlashda ko'rsatilgan narx — oxirgi narx. Qo'shimcha hisob-kitoblardan ajab qolmaysiz.</p>
+      </div>
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">24/7 Yordam</div>
+        <p class="wc-text">Dunyo bo'ylab istalgan soatda Telegram, WhatsApp yoki telefon orqali mutaxassislarimiz tayyor.</p>
+      </div>
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">Raqamli Hujjatlar</div>
+        <p class="wc-text">Chop etilgan qog'ozlar kerak emas. Bron ID telefoningizda yetarli — ekranni ko'rsating, mashina oling.</p>
+      </div>
+      <div class="why-card">
+        <span class="wc-icon"></span>
+        <div class="wc-title">Yangi & Tozalangan</div>
+        <p class="wc-text">Flotimizdagi mashinalar o'rtacha 2 yoshdan katta emas. Har bir brondan oldin professional tozalanadi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== AIRPORTS ====== -->
+<section class="section" id="airports" style="padding-top: 0;">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Joylashuvlar</div>
+    <h2 class="sec-title">Xizmat <span class="gold">aeroportlari</span></h2>
+    <div class="airports-list">
+      <div class="atag"><span class="atag-code">TAS</span> Toshkent — Islom Karimov xalqaro</div>
+      <div class="atag"><span class="atag-code">SKD</span> Samarqand</div>
+      <div class="atag"><span class="atag-code">BHK</span> Buxoro</div>
+      <div class="atag"><span class="atag-code">AZN</span> Andijon</div>
+      <div class="atag"><span class="atag-code">NMA</span> Namangan</div>
+      <div class="atag"><span class="atag-code">FEG</span> Farg'ona</div>
+      <div class="atag"><span class="atag-code">NCU</span> Nukus</div>
+      <div class="atag"><span class="atag-code">IST</span> Istanbul Atatürk</div>
+      <div class="atag"><span class="atag-code">DXB</span> Dubai International</div>
+      <div class="atag"><span class="atag-code">SVO</span> Moscow Sheremetyevo</div>
+      <div class="atag"><span class="atag-code">FRA</span> Frankfurt Main</div>
+      <div class="atag"><span class="atag-code">ALA</span> Almaty</div>
+      <div class="atag"><span class="atag-code">KUL</span> Kuala Lumpur</div>
+      <div class="atag atag-coming">+ Ko'proq qo'shilmoqda...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== REVIEWS ====== -->
+<section class="section" id="reviews">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Mijozlar</div>
+    <h2 class="sec-title">Ular nima <span class="gold">deyishdi?</span></h2>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="rc-stars">★★★★★</div>
+        <p class="rc-text">"Dubai aeroportiga yetib keldim — mashina haqiqatan kutib turibdi. Taxiga pul sarflamadim, dam oldim. Keyingi safar ham faqat DrivePort!"</p>
+        <div class="rc-author">
+          <div class="rc-avatar"></div>
+          <div>
+            <div class="rc-name">Jasur Nazarov</div>
+            <div class="rc-country">🇺🇿 Toshkent, O'zbekiston</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="rc-stars">★★★★★</div>
+        <p class="rc-text">"Istanbul'da birinchi marta bo'ldim. Taksi haydovchilari bilan ovora bo'lmay o'z mashinamda shayarni aylanib chiqdim. Ajoyib tajriba!"</p>
+        <div class="rc-author">
+          <div class="rc-avatar"></div>
+          <div>
+            <div class="rc-name">Malika Rahimova</div>
+            <div class="rc-country">🇺🇿 Samarqand</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="rc-stars">★★★★☆</div>
+        <p class="rc-text">"Bron qilish juda qulay, jarayon juda sodda. Oilam bilan 7 kunlik sayohatda Hyundai Tucson bron qildik — narxi ham adolatli edi."</p>
+        <div class="rc-author">
+          <div class="rc-avatar"></div>
+          <div>
+            <div class="rc-name">Bobur Xoliqov</div>
+            <div class="rc-country"> Andijon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CTA ====== -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-text">
+      <h2>Keyingi sayohatingiz<br>uchun mashina tayorlang</h2>
+      <p>Bir marta sinab ko'ring — taxiga qaytmaysiz.</p>
+    </div>
+    <div class="cta-btns">
+      <button class="btn-gold" onclick="scrollTo('#booking')">🚗 Hozir bron qil</button>
+      <button class="btn-ghost">📞 Aloqa</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo">Drive<b style="color:var(--gold)">Port</b></span>
+        <p>Aeroport mashina ijarasining eng qulay usuli. Dunyo bo'ylab 47+ aeroport, minglab mamnun mijozlar.</p>
+        <div class="footer-socials">
+          <a class="fsoc" href="#" title="Telegram">✈</a>
+          <a class="fsoc" href="#" title="Instagram">📸</a>
+          <a class="fsoc" href="#" title="WhatsApp">💬</a>
+          <a class="fsoc" href="#" title="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Xizmatlar</h5>
+        <ul>
+          <li><a href="#">Aeroport ijarasi</a></li>
+          <li><a href="#">Uzoq muddatli</a></li>
+          <li><a href="#">Korporativ</a></li>
+          <li><a href="#">VIP / Premium</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Kompaniya</h5>
+        <ul>
+          <li><a href="#">Biz haqimizda</a></li>
+          <li><a href="#">Sheriklik</a></li>
+          <li><a href="#">Ish o'rinlari</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Aloqa</h5>
+        <ul>
+          <li><a href="tel:+998712000000">+998 71 200 00 00</a></li>
+          <li><a href="mailto:info@driveport.uz">info@driveport.uz</a></li>
+          <li><a href="#">Telegram: @DrivePort</a></li>
+          <li><a href="#">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 DrivePort. Barcha huquqlar himoyalangan.</p>
+      <div class="footer-badges">
+        <span class="fbadge"> SSL Himoyalangan</span>
+        <span class="fbadge"> Litsenziyalangan</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ====== BOOKING MODAL ====== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+
+    <!-- Form view -->
+    <div id="modalFormView">
+      <div class="modal-head">
+        <h3>Mashina bron qilish</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-car-preview" id="modalCarPreview">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="modal-form">
+        <div class="mf-row">
+          <div class="mf-group full">
+            <label>To'liq ism</label>
+            <input type="text" id="mfName" placeholder="Abdullayev Jasur">
+          </div>
+        </div>
+        <div class="mf-row">
+          <div class="mf-group">
+            <label>Email</label>
+            <input type="email" id="mfEmail" placeholder="jasur@email.com">
+          </div>
+          <div class="mf-group">
+            <label>Telefon</label>
+            <input type="tel" id="mfPhone" placeholder="+998 90 123 45 67">
+          </div>
+        </div>
+        <div class="mf-row">
+          <div class="mf-group">
+            <label>Pasport / ID</label>
+            <input type="text" id="mfPassport" placeholder="AA 1234567">
+          </div>
+          <div class="mf-group">
+            <label>Parvoz raqami</label>
+            <input type="text" id="mfFlight" placeholder="HY 501">
+          </div>
+        </div>
+        <div class="mf-row">
+          <div class="mf-group">
+            <label>Kelish sanasi</label>
+            <input type="date" id="mfArrival" onchange="updatePrice()">
+          </div>
+          <div class="mf-group">
+            <label>Ketish sanasi</label>
+            <input type="date" id="mfDeparture" onchange="updatePrice()">
+          </div>
+        </div>
+        <div class="price-box" id="priceBox"></div>
+        <button class="btn-confirm" onclick="confirmBooking()">
+          💳 Bronni tasdiqlash
+        </button>
+      </div>
+    </div>
+
+    <!-- Success view -->
+    <div class="modal-success" id="modalSuccessView">
+      <div class="ms-icon"></div>
+      <div class="ms-title">Bron tasdiqlandi!</div>
+      <p class="ms-sub">Tasdiqnoma emailingizga yuborildi</p>
+      <div class="ms-id" id="msId">DP-XXXXXX</div>
+      <p class="ms-note">
+        Aeroportga kelganingizda <strong>DrivePort stendiga</strong> boring va ushbu ID raqamni ko'rsating. Stend odatda Terminal B yoki asosiy chiqish zalida joylashgan.
+      </p>
+      <button class="btn-gold" style="width:100%;justify-content:center;" onclick="closeModal()">Yopish</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TOAST ====== -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <span id="toastMsg">Xabar</span>
+</div>
+
+<!-- ====================================================
+     JAVASCRIPT
+===================================================== -->
+<script>
+/* ── Data ── */
+const CARS = [
+  { id:1, type:'Sedan',   emoji:'', name:'Chevrolet Malibu',   price:45,  seats:5, trans:'Avtomat', fuel:'Benzin',  badge:'Mashhur', badgeClass:'' },
+  { id:2, type:'SUV',     emoji:'', name:'Hyundai Tucson',     price:65,  seats:5, trans:'Avtomat', fuel:'Benzin',  badge:null,       badgeClass:'' },
+  { id:3, type:'SUV',     emoji:'', name:'Toyota RAV4',        price:75,  seats:5, trans:'Avtomat', fuel:'Benzin',  badge:null,       badgeClass:'' },
+  { id:4, type:'Premium', emoji:'', name:'Toyota Camry',       price:80,  seats:5, trans:'Avtomat', fuel:'Benzin',  badge:'Premium',  badgeClass:'lux' },
+  { id:5, type:'Premium', emoji:'', name:'Mercedes E-Class',   price:130, seats:5, trans:'Avtomat', fuel:'Benzin',  badge:'Lux',      badgeClass:'lux' },
+  { id:6, type:'Minivan', emoji:'', name:'Kia Carnival',       price:90,  seats:8, trans:'Avtomat', fuel:'Diesel',  badge:null,       badgeClass:'' },
+  { id:7, type:'Elektr',  emoji:'', name:'BYD Atto 3',         price:55,  seats:5, trans:'Avtomat', fuel:'Elektr',  badge:'Yangi',    badgeClass:'new' },
+  { id:8, type:'Elektr',  emoji:'', name:'Tesla Model 3',      price:95,  seats:5, trans:'Avtomat', fuel:'Elektr',  badge:'Premium',  badgeClass:'lux' },
+  { id:9, type:'Sedan',   emoji:'', name:'Gentra 2024',        price:35,  seats:5, trans:'Mexanik', fuel:'Benzin',  badge:null,       badgeClass:'' },
+];
+
+let activeFilter = 'all';
+let selectedCar = null;
+
+/* ── Render Cars ── */
+function renderCars(filter) {
+  const grid = document.getElementById('carsGrid');
+  const list = filter === 'all' ? CARS : CARS.filter(c => c.type === filter);
+  grid.innerHTML = list.map(c => `
+    <div class="car-card" onclick="openModal(${c.id})">
+      <div class="car-thumb">
+        <div class="car-thumb-emoji">${c.emoji}</div>
+        ${c.badge ? `<div class="car-badge-wrap"><span class="cbadge ${c.badgeClass}">${c.badge}</span></div>` : ''}
+      </div>
+      <div class="car-body">
+        <div class="car-type">${c.type}</div>
+        <div class="car-name">${c.name}</div>
+        <div class="car-specs">
+          <div class="cs"> ${c.seats} o'rin</div>
+          <div class="cs"> ${c.trans}</div>
+          <div class="cs"> ${c.fuel}</div>
+        </div>
+        <div class="car-footer">
+          <div>
+            <div class="car-price-day">kuniga</div>
+            <div class="car-price-val"><sup>$</sup>${c.price}</div>
+          </div>
+          <button class="btn-book" onclick="event.stopPropagation(); openModal(${c.id})">Bron →</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterCars(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.cfilter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCars(type);
+}
+
+/* ── Modal ── */
+function openModal(carId) {
+  selectedCar = CARS.find(c => c.id === carId);
+  if (!selectedCar) return;
+
+  // Reset views
+  document.getElementById('modalFormView').style.display = '';
+  const sv = document.getElementById('modalSuccessView');
+  sv.style.display = 'none';
+
+  // Car preview
+  document.getElementById('modalCarPreview').innerHTML = `
+    <div class="mcp-emoji">${selectedCar.emoji}</div>
+    <div class="mcp-info">
+      <div class="mcp-name">${selectedCar.name}</div>
+      <div class="mcp-meta">${selectedCar.type} · ${selectedCar.seats} o'rin · ${selectedCar.trans}</div>
+      <div class="mcp-price">$${selectedCar.price}<span style="font-size:13px;color:var(--gray);font-family:'DM Sans'">/kun</span></div>
+    </div>
+  `;
+
+  // Pre-fill dates from booking form
+  const bfA = document.getElementById('bfArrival').value;
+  const bfD = document.getElementById('bfDeparture').value;
+  if (bfA) document.getElementById('mfArrival').value = bfA;
+  if (bfD) document.getElementById('mfDeparture').value = bfD;
+
+  updatePrice();
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function updatePrice() {
+  if (!selectedCar) return;
+  const a = document.getElementById('mfArrival').value;
+  const d = document.getElementById('mfDeparture').value;
+  let days = 3;
+  if (a && d) {
+    const diff = Math.round((new Date(d) - new Date(a)) / 86400000);
+    if (diff > 0) days = diff;
+  }
+  const subtotal = selectedCar.price * days;
+  const service = Math.round(subtotal * 0.1);
+  const total = subtotal + service;
+  document.getElementById('priceBox').innerHTML = `
+    <div class="pb-row"><span>$${selectedCar.price}/kun × ${days} kun</span><span>$${subtotal}</span></div>
+    <div class="pb-row"><span>Xizmat to'lovi (10%)</span><span>$${service}</span></div>
+    <div class="pb-total"><span>Jami to'lov</span><span>$${total}</span></div>
+  `;
+}
+
+function confirmBooking() {
+  const name = document.getElementById('mfName').value.trim();
+  const email = document.getElementById('mfEmail').value.trim();
+  const passport = document.getElementById('mfPassport').value.trim();
+
+  if (!name) { showToast('⚠️', "Iltimos, to'liq ismingizni kiriting"); return; }
+  if (!email || !email.includes('@')) { showToast('⚠️', "To'g'ri email manzil kiriting"); return; }
+  if (!passport) { showToast('⚠️', "Pasport / ID raqamini kiriting"); return; }
+
+  // Generate booking ID
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id = 'DP-';
+  for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
+
+  document.getElementById('msId').textContent = id;
+  document.getElementById('modalFormView').style.display = 'none';
+  const sv = document.getElementById('modalSuccessView');
+  sv.style.display = 'flex';
+  sv.style.flexDirection = 'column';
+}
+
+/* ── Search ── */
+function doSearch() {
+  const airport = document.getElementById('bfAirport').value;
+  if (!airport) { showToast('⚠️', "Iltimos, aeroportni tanlang"); return; }
+  const type = document.getElementById('bfType').value;
+  filterCars(type === 'all' ? 'all' : type, document.querySelector('.cfilter'));
+  document.getElementById('cars').scrollIntoView({ behavior: 'smooth' });
+  showToast('✅', `${airport.split('—')[0].trim()} uchun mashinalar topildi`);
+}
+
+/* ── Booking tabs ── */
+function setTab(btn, type) {
+  document.querySelectorAll('.btab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ── Scroll helper ── */
+function scrollTo(selector) {
+  const el = document.querySelector(selector);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ── Mobile nav ── */
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+/* ── Lang toggle (demo) ── */
+function toggleLang() {
+  showToast('', 'Ko\'p tilli versiya tez orada!');
+}
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ── Navbar scroll effect ── */
+window.addEventListener('scroll', () => {
+  const nb = document.getElementById('navbar');
+  nb.style.background = window.scrollY > 50
+    ? 'rgba(8,8,16,0.97)'
+    : 'rgba(8,8,16,0.9)';
+});
+
+/* ── Default dates ── */
+(function() {
+  const today = new Date();
+  const plus4 = new Date(today); plus4.setDate(today.getDate() + 4);
+  const plus8 = new Date(today); plus8.setDate(today.getDate() + 8);
+  const fmt = d => d.toISOString().split('T')[0];
+  document.getElementById('bfArrival').value = fmt(plus4);
+  document.getElementById('bfDeparture').value = fmt(plus8);
+})();
+
+/* ── Init ── */
+renderCars('all');
+</script>
+</body>
+</html>

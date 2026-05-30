@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Profil - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero compact">
+  <div class="section-inner">
+    <div class="profile-head">
+      <div>
+        <div class="sec-eyebrow">Mijoz kabineti</div>
+        <h1 class="hero-h1 small">{{ user.get_full_name|default:user.username }}</h1>
+        <p class="hero-p">Shaxsiy profilingizda faol va yakunlangan bronlar, safar sanalari va to'lov summalari ko'rsatiladi.</p>
+      </div>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="btn-ghost" type="submit">Chiqish</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0">
+  <div class="section-inner">
+    <div class="section-headline">
+      <h2 class="sec-title">Mening <span class="gold">bronlarim</span></h2>
+      <a class="btn-gold" href="{% url 'booking_create' %}">Yangi bron</a>
+    </div>
+    <div class="booking-list">
+      {% for booking in bookings %}
+        <article class="booking-item">
+          <div>
+            <div class="ms-id inline">{{ booking.booking_code }}</div>
+            <h3>{{ booking.car.name }}</h3>
+            <p>{{ booking.airport.city }} ({{ booking.airport.code }}) · {{ booking.arrival_date }} - {{ booking.departure_date }}</p>
+          </div>
+          <div class="booking-meta">
+            <span class="status status-{{ booking.status }}">{{ booking.get_status_display }}</span>
+            <strong>${{ booking.total_price }}</strong>
+            <a class="btn-book" href="{% url 'booking_success' booking.booking_code %}">Ochish</a>
+          </div>
+        </article>
+      {% empty %}
+        <div class="empty-state">
+          Profilingizga biriktirilgan bron hali yo'q.
+          <a class="inline-link" href="{% url 'car_list' %}">Mashina tanlang</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

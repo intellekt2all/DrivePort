@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Biz haqimizda - DrivePort{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="section-inner about-hero">
+    <div>
+      <div class="sec-eyebrow">DrivePort</div>
+      <h1 class="hero-h1 small">Aeroportga mos <span class="gold">ijara xizmati</span></h1>
+      <p class="hero-p">
+        DrivePort aeroportda qabul qilinadigan va qaytariladigan avtomobillar ijarasini soddalashtiradi. Xizmat biznes safarlari, oilaviy tashriflar va qisqa muddatli ijaraga yo'naltirilgan.
+      </p>
+      <div class="hero-stats">
+        <div>
+          <div class="hstat-num">{{ airports_count }}</div>
+          <div class="hstat-label">faol aeroport</div>
+        </div>
+        <div>
+          <div class="hstat-num">{{ cars_count }}</div>
+          <div class="hstat-label">mashina bazada</div>
+        </div>
+        <div>
+          <div class="hstat-num">24/7</div>
+          <div class="hstat-label">mijoz bilan aloqa</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-photo">
+      <img src="https://images.unsplash.com/photo-1485575301924-6891ef935dcd?auto=format&fit=crop&w=1400&q=80" alt="Aeroport yo'lidagi avtomobil">
+    </div>
+  </div>
+</section>
+
+<section class="section section-surface">
+  <div class="section-inner">
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="wc-title">Xizmat modeli</div>
+        <p class="wc-text">Mijoz safardan oldin buyurtma yuboradi, avtomobil mavjudligi tasdiqlanadi va qabul qilish nuqtasi belgilanadi.</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-title">Jarayon nazorati</div>
+        <p class="wc-text">Bronlar, aloqa so'rovlari va foydalanuvchi profillari bir xil boshqaruv panelida yuritiladi.</p>
+      </div>
+      <div class="why-card">
+        <div class="wc-title">Operatsion ma'lumotlar</div>
+        <p class="wc-text">Aeroportlar, tariflar, mavjud avtomobillar va buyurtmalar alohida tartibda saqlanadi va yangilanadi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="sec-eyebrow">Fikrlar</div>
+    <h2 class="sec-title">Mijoz ishonchi <span class="gold">asosiy metrika</span></h2>
+    <div class="reviews-grid">
+      {% for review in reviews %}
+        <article class="review-card">
+          <div class="rc-stars">{{ review.stars }}</div>
+          <p class="rc-text">"{{ review.text }}"</p>
+          <div class="rc-author">
+            <div class="rc-avatar">{{ review.avatar }}</div>
+            <div>
+              <div class="rc-name">{{ review.name }}</div>
+              <div class="rc-country">{{ review.country }}</div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

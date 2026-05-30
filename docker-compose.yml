@@ -1,0 +1,18 @@
+services:
+  web:
+    image: python:3.11-slim
+    container_name: driveport-web
+    working_dir: /app
+    restart: unless-stopped
+    environment:
+      DJANGO_DATABASE_ENGINE: sqlite
+      SQLITE_NAME: /app/db.sqlite3
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+    command: >
+      sh -c "pip install -r requirements.txt &&
+      python manage.py migrate --noinput &&
+      python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
